@@ -35,12 +35,19 @@ const Note = mongoose.model("Note", noteSchema);
 
 app.post("/api/notes", async (req, res) => {
   try {
-    const newNote = new Note(req.body);
-    await newNote.save();
-    res.status(200).send("Note saved successfully.");
+    const { questionNumber, ...noteData } = req.body;
+
+    // Update the note if it exists or create a new one
+    const updatedNote = await Note.findOneAndUpdate(
+      { questionNumber }, // Search by questionNumber
+      { ...noteData, timestamp: new Date().toISOString() }, // Update fields
+      { new: true, upsert: true } // Create if not found
+    );
+
+    res.status(200).send("Note saved or updated successfully.");
   } catch (err) {
     console.error(err);
-    res.status(500).send("Failed to save note.");
+    res.status(500).send("Failed to save or update note.");
   }
 });
 
