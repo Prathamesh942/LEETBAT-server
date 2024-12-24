@@ -18,13 +18,17 @@ mongoose.connect(process.env.MONGO, {
   useUnifiedTopology: true,
 });
 
+// Define the schema with an implicit timestamp
 const noteSchema = new mongoose.Schema({
   questionName: String,
   questionNumber: String,
   questionTopics: [String],
   url: String,
-  timestamp: String,
   note: String,
+  timestamp: {
+    type: String,
+    default: () => new Date().toISOString(), // Automatically sets the timestamp
+  },
 });
 
 const Note = mongoose.model("Note", noteSchema);
@@ -35,6 +39,7 @@ app.post("/api/notes", async (req, res) => {
     await newNote.save();
     res.status(200).send("Note saved successfully.");
   } catch (err) {
+    console.error(err);
     res.status(500).send("Failed to save note.");
   }
 });
