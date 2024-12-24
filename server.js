@@ -25,6 +25,7 @@ const noteSchema = new mongoose.Schema({
   questionTopics: [String],
   url: String,
   note: String,
+  difficulty: String,
   timestamp: {
     type: String,
     default: () => new Date().toISOString(), // Automatically sets the timestamp
