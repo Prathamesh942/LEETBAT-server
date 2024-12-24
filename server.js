@@ -51,4 +51,14 @@ app.post("/api/notes", async (req, res) => {
   }
 });
 
+app.get("/api/notes", async (req, res) => {
+  try {
+    const data = await Note.find();
+    res.status(200).json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Failed to save or update note.");
+  }
+});
+
 app.listen(5000, () => console.log("Server running on port 5000"));
